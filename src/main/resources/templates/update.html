@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Library • Update Book</title>
+  <link rel="stylesheet" th:href="@{/css/styles.css}" href="/css/styles.css"/>
+</head>
+<body>
+  <div class="container">
+
+    <!-- 🔔 Flash Messages -->
+    <div th:if="${successMessage}" class="alert" style="background: rgba(16,185,129,.15); color:#10b981;">
+      <span th:text="${successMessage}"></span>
+    </div>
+    <div th:if="${errorMessage}" class="alert" style="background: rgba(239,68,68,.15); color:#ef4444;">
+      <span th:text="${errorMessage}"></span>
+    </div>
+
+    <!-- 📦 Update Book Card -->
+    <div class="card card-pad" style="max-width:600px; margin:auto;">
+      <h1 class="h1">✏️ Update Book Details</h1>
+      <p class="lead">Modify the book information and save the changes to the library system.</p>
+
+      <!-- 📑 Update Form -->
+      <form th:action="@{/books/update}" th:object="${book}" method="post" class="form">
+        <input type="hidden" th:field="*{id}" />
+
+        <div class="input">
+          <label for="title">📖 Title</label>
+          <input id="title" th:field="*{title}" placeholder="Enter book title" required />
+        </div>
+
+        <div class="input">
+          <label for="author">✍️ Author</label>
+          <input id="author" th:field="*{author}" placeholder="Enter author's name" required />
+        </div>
+
+        <div class="grid grid-2">
+          <div class="input">
+            <label for="quantity">📦 Quantity</label>
+            <input id="quantity" type="number" th:field="*{quantity}" min="0" placeholder="0" required />
+          </div>
+          <div class="input">
+            <label for="barcode">🏷 Barcode</label>
+            <input id="barcode" th:field="*{barcode}" placeholder="Scan or enter barcode" required />
+          </div>
+        </div>
+
+        <!-- 🔘 Form Actions -->
+        <div class="footer-actions">
+          <button class="btn btn-success" type="submit">Update Book</button>
+          <a class="btn btn-outline" th:href="@{/books/list}">Cancel</a>
+        </div>
+      </form>
+    </div>
+
+  </div>
+</body>
+</html>

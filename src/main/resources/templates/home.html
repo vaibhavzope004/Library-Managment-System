@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Library • Home</title>
+<link rel="stylesheet" th:href="@{/css/styles.css}" href="/css/styles.css"/>
+</head>
+<body>
+<div class="container">
+  <div class="card card-pad">
+    <h1 class="h1">📚 Library Management</h1>
+    <p class="lead">Fast, clean, and simple. Use the actions below to manage books and track issues/returns.</p>
+    <div class="nav">
+      <a class="btn" th:href="@{/books/list}">View Books</a>
+      <a class="btn" th:href="@{/books/add}">Add Book</a>
+      <a class="btn btn-outline" th:href="@{/transactions/history}">Transaction History</a>
+    </div>
+  </div>
+  <div class="grid grid-2" style="margin-top:16px">
+    <div class="card card-pad">
+      <h2 class="h2">Tips</h2>
+      <p class="note">Use <span class="kbd">Ctrl</span> + <span class="kbd">K</span> on book list to search instantly.</p>
+      <p class="note">Delete a book only when all issued copies are returned.</p>
+    </div>
+    <div class="card card-pad">
+      <h2 class="h2">Quick Links</h2>
+      <div class="nav">
+        <a class="btn btn-warn" th:href="@{/transactions/history}">View History</a>
+        <form th:action="@{/deleteAllTransactions}" method="post">
+          <button class="btn btn-danger" onclick="return confirm('Delete ALL transaction history?')">Purge History</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

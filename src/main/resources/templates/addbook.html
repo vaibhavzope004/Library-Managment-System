@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Library • Add Book</title>
+  <link rel="stylesheet" th:href="@{/css/styles.css}" href="/css/styles.css"/>
+</head>
+<body>
+<div class="container">
+
+  <!-- ✅ Flash Messages (Success / Error) -->
+  <div th:if="${successMessage}" class="alert" style="background: rgba(16,185,129,.15); color:#10b981; margin-bottom:16px;">
+    <span th:text="${successMessage}"></span>
+  </div>
+  <div th:if="${errorMessage}" class="alert" style="background: rgba(239,68,68,.15); color:#ef4444; margin-bottom:16px;">
+    <span th:text="${errorMessage}"></span>
+  </div>
+
+  <!-- 📦 Card -->
+  <div class="card card-pad" style="max-width:650px;margin:auto">
+    <h1 class="h1">➕ Add a New Book</h1>
+    <p class="lead">Enter the details below to add a book into the library system.</p>
+
+    <!-- 📑 Book Form -->
+    <form th:action="@{/books/add}" th:object="${book}" method="post" class="form">
+      
+      <div class="input">
+        <label for="title">📖 Title</label>
+        <input id="title" th:field="*{title}" placeholder="Enter book title" required>
+      </div>
+
+      <div class="input">
+        <label for="author">✍️ Author</label>
+        <input id="author" th:field="*{author}" placeholder="Enter author's name" required>
+      </div>
+
+      <div class="grid grid-2">
+        <div class="input">
+          <label for="quantity">📦 Quantity</label>
+          <input id="quantity" type="number" min="0" th:field="*{quantity}" placeholder="0" required>
+        </div>
+        <div class="input">
+          <label for="barcode">🏷 Barcode</label>
+          <input id="barcode" th:field="*{barcode}" placeholder="Scan or enter barcode" required>
+        </div>
+      </div>
+
+      <!-- 🔘 Actions -->
+      <div class="footer-actions">
+        <a class="btn btn-outline" th:href="@{/books/list}">Cancel</a>
+        <button class="btn btn-success" type="submit">Save Book</button>
+      </div>
+    </form>
+  </div>
+</div>
+</body>
+</html>

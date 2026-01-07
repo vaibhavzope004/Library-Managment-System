@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Library • Books</title>
+  <link rel="stylesheet" th:href="@{/css/styles.css}" href="/css/styles.css"/>
+  <style>
+    /* 🎨 Root variables */
+    :root{
+      --bg: #0b1021;
+      --card: #0f1724;
+      --muted: #98a0b3;
+      --primary: #6ee7ff;
+      --accent: #a78bfa;
+      --success: #22c55e;
+      --danger: #ef4444;
+      --outline: #1f2937;
+      --radius: 12px;
+      --shadow: 0 8px 30px rgba(2,6,23,0.6);
+      font-family: Inter, sans-serif;
+    }
+
+    *{box-sizing:border-box;}
+    body{
+      margin:0; padding:0;
+      background: var(--bg);
+      color:#e6eef7;
+      font-size:16px;
+      line-height:1.4;
+      animation:fadeIn 1s ease forwards; opacity:0;
+    }
+
+    @keyframes fadeIn{ to{opacity:1;} }
+    @keyframes fadeInUp{ from{opacity:0; transform:translateY(20px);} to{opacity:1; transform:translateY(0);} }
+    @keyframes btnPulse{ 0%{transform:scale(1);}50%{transform:scale(1.05);}100%{transform:scale(1);} }
+
+    .container{padding:20px; max-width:1200px; margin:auto;}
+    .card{background:var(--card); border-radius:var(--radius); padding:20px; box-shadow:var(--shadow);}
+    .card-pad{padding:24px;}
+    .row{display:flex; flex-wrap:wrap; gap:12px; align-items:center;}
+    h1.h1{font-size:28px; margin:0; animation:fadeInUp 0.8s ease forwards;}
+
+    .nav a{
+      padding:8px 16px; border-radius:8px; font-weight:600; text-decoration:none; transition:0.3s;
+      color:var(--muted); background:var(--outline); animation:fadeInUp 1s ease forwards;
+    }
+    .nav a:hover{
+      background:linear-gradient(90deg,var(--primary),var(--accent));
+      color:#022; transform:scale(1.05);
+    }
+    .btn-success{background:var(--success); color:#022;}
+    .btn-primary{background:var(--primary); color:#022;}
+    .btn-danger{background:var(--danger); color:#fff;}
+    .btn-outline{background:transparent; border:1px solid var(--muted); color:var(--muted);}
+    .btn{padding:6px 12px; border:none; border-radius:8px; cursor:pointer; transition:0.3s;}
+    .btn:hover{animation:btnPulse 0.5s;}
+
+    .search{margin:16px 0; text-align:right;}
+    .search input{
+      padding:10px 12px; width:100%; max-width:300px; border-radius:8px; border:none;
+      background:var(--outline); color:#fff; transition:0.3s;
+    }
+    .search input:focus{outline:none; box-shadow:0 0 10px var(--primary);}
+
+    /* Scrollable and compact table */
+    .table-wrapper {
+      padding: 0;
+      background: var(--card);
+      border-radius: 16px;
+      overflow: hidden;
+      margin-top: 16px;
+      box-shadow: var(--shadow);
+    }
+
+    .table-scroll {
+      max-height: 300px;  /* Reduced height */
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+
+    .table-scroll table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .table-scroll table thead th {
+      position: sticky;
+      top: 0;
+      background: var(--outline);
+      z-index: 2;
+      padding: 10px 12px;  /* Reduced padding */
+      font-size: 14px;     /* Smaller font */
+    }
+
+    .table-scroll table tbody td {
+      padding: 8px 12px;   /* Reduced padding */
+      font-size: 13px;     /* Smaller font */
+    }
+
+    tbody tr{transition:0.3s; cursor:pointer;}
+    tbody tr:hover{background:rgba(110,231,255,0.1); transform:translateX(2px);}
+
+    /* Badges */
+    .badge{
+      padding: 2px 6px;   /* Compact badge */
+      font-size: 11px;
+      border-radius: 8px;
+      background: var(--outline);
+      font-weight:600;
+    }
+
+    form{display:inline;}
+  </style>
+  <script>
+    function filterRows() {
+      const q = (document.getElementById('q').value || '').toLowerCase();
+      for (const tr of document.querySelectorAll('tbody tr')) {
+        tr.style.display = tr.dataset.row.includes(q) ? '' : 'none';
+      }
+    }
+  </script>
+</head>
+<body>
+  <div class="container">
+
+    <!-- 📦 Books Card -->
+    <div class="card card-pad">
+      <div class="row" style="justify-content:space-between;">
+        <h1 class="h1">📚 Library Books</h1>
+        <div class="nav">
+          <a class="btn btn-outline" th:href="@{/home}">🏠 Home</a>
+          <a class="btn btn-success" th:href="@{/books/add}">➕ Add Book</a>
+          <a class="btn btn-outline" th:href="@{/transactions/history}">🕒 History</a>
+        </div>
+      </div>
+
+      <!-- 🔍 Search -->
+      <div class="search">
+        <input id="q" oninput="filterRows()" placeholder="Search by title, author, or barcode…" autofocus>
+      </div>
+
+      <!-- 📄 Scrollable & compact Books Table -->
+      <div class="card table-wrapper">
+        <div class="table-scroll">
+          <table class="table">
+            <thead>
+  <tr>
+    <th>Sr. No.</th>
+    <th>Title</th>
+    <th>Author</th>
+    <th>Qty</th>
+    <th>Barcode</th>
+    <th>Actions</th>
+  </tr>
+</thead>
+<tbody>
+  <tr th:each="b, stat : ${books}" 
+      th:attr="data-row=${(b.title+' '+b.author+' '+b.barcode).toLowerCase()}">
+    <!-- Sr. No. Auto increment -->
+    <td th:text="${stat.index + 1}">1</td>
+
+    <td th:text="${b.title}">Title</td>
+    <td th:text="${b.author}">Author</td>
+    <td><span class="badge" th:text="${b.quantity}">0</span></td>
+    <td><span class="badge" th:text="${b.barcode}">CODE</span></td>
+    <td class="row" style="gap:8px; flex-wrap:wrap;">
+      <a class="btn btn-outline" th:href="@{/books/edit/{id}(id=${b.id})}">✏️ Edit</a>
+      <a class="btn btn-primary" th:href="@{/books/issue/{id}(id=${b.id})}">📖 Issue</a>
+      <form th:action="@{/books/delete/{id}(id=${b.id})}" method="post"
+            onsubmit="return confirm('Delete this book? Only allowed if all issues are returned.')">
+        <button class="btn btn-danger">🗑 Remove</button>
+      </form>
+    </td>
+  </tr>
+</tbody>
+
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</body>
+</html>
